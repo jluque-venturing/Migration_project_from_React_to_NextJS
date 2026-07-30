@@ -49,6 +49,27 @@ Los IDs `B*` siguen la numeración de `docs/PLAN-MIGRACION.md` §4.
 - **Nota:** bug **preexistente** en el proyecto original, no introducido por la
   migración.
 
+## B9 · Diálogos nativos que nunca se abrían (misma causa que B8)
+
+- **Qué pasaba:** la paleta de comandos y el modal de nueva colección no se veían
+  al abrirlos. El elemento `<dialog>` se agregaba al DOM pero quedaba invisible.
+- **Por qué pasaba:** un `<dialog>` sin el atributo `open` y sin `showModal()`
+  tiene `display: none` por defecto. Estos componentes hacen
+  `if (!isOpen) return null` **antes** de renderizar el diálogo, así que en el
+  primer render `dialogRef.current` es `null`. El `useEffect` que llama a
+  `showModal()` tenía dependencias vacías (`[]`): corría una sola vez, salía
+  temprano por el ref nulo, y **nunca volvía a correr** cuando `isOpen` pasaba a
+  `true`. Es exactamente el mismo error que [B8](#b8), en otros tres archivos.
+- **Cómo se solucionó:** se agregó `isOpen` a las dependencias de los tres effects
+  afectados (abrir el diálogo, suscribir el listener de `close`, y enfocar el input).
+- **Archivos:**
+  `src/features/command-palette/components/CommandPalette.tsx`,
+  `src/features/collections/components/NewCollectionModal.tsx`
+- **Nota:** bug **preexistente**. `TourOverlay` tenía el mismo patrón pero no
+  fallaba en el original, porque para un usuario nuevo `hasSeenTour` es `false` y
+  el diálogo se renderiza en el primer render. Sí se rompía al migrar, al sumarle
+  el guard de hidratación, así que también se le corrigieron las dependencias.
+
 ---
 
 # Bugs introducidos por la migración
@@ -94,6 +115,20 @@ Los IDs `B*` siguen la numeración de `docs/PLAN-MIGRACION.md` §4.
 - **Archivos:** `src/app/providers.tsx`, `src/features/form-theme/store.ts`
 - **Nota:** el store de `settings` no tenía el problema porque rehidrata dentro de
   `useTheme`. El de `form-lab`, migrado junto con este fix, ya nació conectado.
+
+## M3 · Funcionalidad del shell perdida al migrar el layout
+
+- **Qué pasaba:** el atajo `Ctrl+K` / `⌘K` no hacía nada, el botón de la paleta de
+  comandos en la barra de navegación no respondía al click, y el contador de
+  formularios al lado de "Mis formularios" había desaparecido.
+- **Por qué pasaba:** al partir el `AppLayout` original en `Header` / `Nav` /
+  `Footer`, quedaron sin portar tres cosas que vivían en ese archivo: el
+  `useKeyboardShortcut` del atajo, el `onClick` del botón, y el badge con
+  `formCount`. Además `<CommandPalette />` no estaba montado en ningún lado.
+- **Cómo se solucionó:** los atajos y el montaje de `<CommandPalette />` se
+  pusieron en `app/providers.tsx` (el equivalente al `AppProviders` original), y
+  el `onClick` junto con el badge volvieron a `Nav.tsx`.
+- **Archivos:** `src/app/providers.tsx`, `src/components/shell/Nav.tsx`
 
 ---
 
