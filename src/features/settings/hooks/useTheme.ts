@@ -16,10 +16,6 @@ export function useTheme() {
   const resolved = resolveTheme(mode, systemTheme);
 
   useEffect(() => {
-    useThemeStore.persist.rehydrate();
-  }, []);
-
-  useEffect(() => {
     applyThemeToDocument(resolved);
   }, [resolved]);
 
