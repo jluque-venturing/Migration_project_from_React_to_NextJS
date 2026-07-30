@@ -142,9 +142,19 @@ export function ThemedFormSuccess({
   theme,
   message,
   onReset,
-}: ThemedFormSuccessProps) {.
-.
-.
+}: ThemedFormSuccessProps) {
+  return (
+    <div
+      className={cn(
+        "text-center py-12 animate-[scaleIn_400ms_ease-out] form-themed-text",
+        fontFamilyClass(theme.fontFamily)
+      )}
+    >
+      <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full form-themed-bg-primary text-white">
+        <CheckCircle2 size={40} />
+      </div>
+      <h2 className="text-2xl font-bold mb-2">¡Listo!</h2>
+      <p className="opacity-80 mb-6">{message}</p>
       <Button type="button" variant="secondary" onClick={onReset}>
         Completar de nuevo
       </Button>

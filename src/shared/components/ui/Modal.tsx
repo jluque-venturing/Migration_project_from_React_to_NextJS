@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AlertTriangle, Info } from "lucide-react";
 import { Button } from "@/shared/components/ui/Button";
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
 import { cn } from "@/shared/lib/helpers";
-
-// Detección de hidratación sin setState dentro de un effect: en el servidor
-// devuelve false y después de hidratar, true. Hace falta porque createPortal
-// necesita document.body, que no existe durante el SSR de Next.
-const subscribeToNothing = () => () => {};
-const getSnapshotOnClient = () => true;
-const getSnapshotOnServer = () => false;
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,11 +33,7 @@ export function Modal({
   // listeners on every render.
   const onCancelRef = useRef(onCancel);
   const onConfirmRef = useRef(onConfirm);
-  const isHydrated = useSyncExternalStore(
-    subscribeToNothing,
-    getSnapshotOnClient,
-    getSnapshotOnServer
-  );
+  const isHydrated = useIsHydrated();
 
   useEffect(() => {
     onCancelRef.current = onCancel;

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { Button } from "@/shared/components/ui/Button";
 import { Input, Textarea } from "@/shared/components/ui/Input";
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
 import { buildFormSchema } from "@/features/form-lab/utils";
 import type { FormField } from "@/features/form-lab/schema";
 import { useFormTheme } from "@/features/form-theme/hooks/useFormTheme";
@@ -43,11 +44,7 @@ export function ThemePreviewModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsHydrated();
 
   const resolver = zodResolver(buildFormSchema(fields));
   const defaultValues = Object.fromEntries(fields.map((field) => [field.id, ""]));

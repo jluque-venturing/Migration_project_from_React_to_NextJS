@@ -51,6 +51,34 @@ Los IDs `B*` siguen la numeración de `docs/PLAN-MIGRACION.md` §4.
 
 ---
 
+# Bugs introducidos por la migración
+
+## M1 · Archivos de `form-theme` commiteados con elisiones
+
+- **Qué pasaba:** el repo **no compilaba**. `pnpm run typecheck` y `pnpm run build`
+  fallaban con `TS1003: Identifier expected` y `Declaration or statement expected`.
+- **Por qué pasaba:** dos archivos se commitearon con líneas que contenían un punto
+  suelto (`.`) donde debía ir código. Son marcadores de elisión —el típico "…resto
+  del código acá"— que quedaron guardados como código literal:
+  - `presets/index.ts` líneas 242-244: además de romper la sintaxis, se habían
+    perdido **6 de los 15 presets** del original (`sunset`, `ocean`, `retro`,
+    `cyberpunk`, `nature`, `elegant`) y el preset `neon` estaba cortado por la mitad.
+    El archivo tenía 259 líneas contra 426 del original.
+  - `ThemedFormLayout.tsx` líneas 145-147: faltaba todo el cuerpo del componente
+    `ThemedFormSuccess` (el `return` con el ícono de éxito, el título y el mensaje).
+- **Cómo se solucionó:**
+  - `presets/index.ts` se restauró copiando el archivo original completo. No tenía
+    ninguna adaptación de Next (es data pura), así que la copia es 1:1.
+  - `ThemedFormLayout.tsx` se restauró solo el bloque faltante, conservando las
+    adaptaciones de Next que sí estaban bien hechas (`"use client"` y el `<img>`
+    ya convertido a `next/image`).
+- **Cómo se detectó:** `pnpm run typecheck` + comparación de conteo de líneas
+  contra el proyecto original.
+- **Cómo evitarlo:** correr `pnpm run typecheck && pnpm run build` **antes** de
+  cada commit. Es la regla que ya figura en `docs/PLAN-MIGRACION.md` §7.
+
+---
+
 ## Deudas de accesibilidad corregidas al migrar
 
 ### Spinner de carga sin nombre accesible
@@ -71,7 +99,8 @@ Referencia: `docs/PLAN-MIGRACION.md` §3.
 |---|---|
 | **R1** Zustand `persist` + SSR | `skipHydration: true` + `persist.rehydrate()` en un effect |
 | **R2** FOUC del tema | script bloqueante en el `<head>` del root layout |
-| **R4** `createPortal` en SSR | `useSyncExternalStore` para detectar la hidratación antes de portalizar |
+| **R4** `createPortal` en SSR | hook compartido `useIsHydrated()` (`useSyncExternalStore`) antes de portalizar |
+| **R9** `<img>` planos | `next/image`; las imágenes subidas por el usuario van con `unoptimized` porque son data URIs |
 | **R5** `#root` inexistente en Next | `min-height` movido a `body` |
 | **R8** Fuentes por CDN | `next/font/google` con Space Grotesk y JetBrains Mono |
 | **R11** `ErrorBoundary` class component | `"use client"` |

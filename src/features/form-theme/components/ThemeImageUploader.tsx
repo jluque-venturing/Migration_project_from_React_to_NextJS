@@ -1,6 +1,7 @@
 "use client";
 
 import { useId } from "react";
+import Image from "next/image";
 import { X, ImageIcon } from "lucide-react";
 import { Button } from "@/shared/components/ui/Button";
 import { cn } from "@/shared/lib/helpers";
@@ -53,10 +54,12 @@ export function ThemeImageUploader({
               aspectClass[aspectRatio]
             )}
           >
-            <img
+            <Image
               src={imageUrl}
               alt={`Vista previa de ${label.toLowerCase()}`}
-              className="h-full w-full object-contain"
+              fill
+              unoptimized
+              className="object-contain"
             />
           </div>
           <Button
