@@ -77,6 +77,24 @@ Los IDs `B*` siguen la numeración de `docs/PLAN-MIGRACION.md` §4.
 - **Cómo evitarlo:** correr `pnpm run typecheck && pnpm run build` **antes** de
   cada commit. Es la regla que ya figura en `docs/PLAN-MIGRACION.md` §7.
 
+## M2 · Los presets guardados por el usuario se perdían al recargar
+
+- **Qué pasaba:** al guardar un tema propio desde el drawer, el preset aparecía en
+  la lista, pero desaparecía al recargar la página. Se escribía en `localStorage`
+  y nunca se volvía a leer.
+- **Por qué pasaba:** el store de `form-theme` declara `skipHydration: true` —
+  correcto, evita el mismatch de hidratación del SSR— pero eso desactiva la
+  rehidratación automática y **nadie llamaba a `persist.rehydrate()`**. El propio
+  comentario del store decía que se resolvería "en un componente cliente de alto
+  nivel (ej. Providers)", pero esa parte quedó sin hacer.
+- **Cómo se solucionó:** se centralizó la rehidratación de todos los stores
+  persistidos en `src/app/providers.tsx`, dentro del hook
+  `useRehydratePersistedStores()`. Queda un único lugar donde sumar cada store
+  nuevo que use `persist`.
+- **Archivos:** `src/app/providers.tsx`, `src/features/form-theme/store.ts`
+- **Nota:** el store de `settings` no tenía el problema porque rehidrata dentro de
+  `useTheme`. El de `form-lab`, migrado junto con este fix, ya nació conectado.
+
 ---
 
 ## Deudas de accesibilidad corregidas al migrar
