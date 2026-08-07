@@ -19,6 +19,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? "https://formforge-next.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "FormForge — Laboratorio de Validación de Formularios",
     template: "%s · FormForge",
@@ -28,9 +31,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "FormForge",
+    url: "/",
+    title: "FormForge — Laboratorio de Validación de Formularios",
+    description:
+      "Armá formularios, validalos en vivo y compartilos con diseño propio.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "FormForge — laboratorio de validación de formularios",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "FormForge — Laboratorio de Validación de Formularios",
+    description:
+      "Armá formularios, validalos en vivo y compartilos con diseño propio.",
   },
 };
 
