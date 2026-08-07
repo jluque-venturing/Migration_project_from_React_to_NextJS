@@ -162,7 +162,62 @@ Referencia: `docs/PLAN-MIGRACION.md` §3.
 
 ---
 
-> **Pendiente:** los bugs **B1** (`<main>` anidado en `SharePage` y
-> `FormPreviewPage`), **B3** (falta `og:image`), **B4** (sitemap/robots),
-> **B5** (metadata por ruta) y **B6** (feature `collections` sin documentar)
-> se resuelven en los tracks que todavía no arrancaron.
+## B1 · El layout tenía un `<main>` anidado en las páginas de vista previa y share
+
+- **Qué pasaba:** la salida HTML de `FormPreviewPage` y `SharePage` generaba un
+  elemento `<main>` dentro del `<main id="main-content">` que define el root layout.
+- **Por qué pasaba:** el proyecto original devolvía `main` en esas páginas y la
+  migración a Next reprodujo la misma estructura sin notar que el layout ya lo
+  había definido.
+- **Cómo se solucionó:** se dejó una sola landmark principal en el root layout y
+  las páginas devolvieron contenedores semánticos (`div` / `section`) sin anidar
+  ningún `<main>` adicional.
+- **Archivos:** `src/app/layout.tsx`, `src/features/form-lab/components/SharePage.tsx`,
+  `src/features/form-lab/components/FormPreviewPage.tsx`
+
+## B3 · El sitio no tenía imagen Open Graph ni canonical
+
+- **Qué pasaba:** el metadata del sitio no exponía una imagen `og:image` ni una
+  URL canónica en la raíz, por lo que el compartir en redes y el SEO básico quedaban
+  incompletos.
+- **Por qué pasaba:** la migración del metadata local no incluyó `canonical` ni `images`
+  dentro de `openGraph`, y el proyecto no tenía un asset OG. En el proyecto original
+  lo único que existía era `og:type` y una card de Twitter sin contenido concreto.
+- **Cómo se solucionó:** se agregó `alternates.canonical`, `openGraph.images`, y un
+  generator `src/app/opengraph-image.tsx` para producir una imagen dinámica con el
+  branding de FormForge.
+- **Archivos:** `src/app/layout.tsx`, `src/app/opengraph-image.tsx`
+
+## B4 · El sitio no exponía `robots.txt` ni `sitemap.xml`
+
+- **Qué pasaba:** el proyecto no generaba el mapa de sitios ni permitía que los
+  crawlers conocieran las rutas indexables del proyecto.
+- **Por qué pasaba:** durante la migración se omitieron los archivos de SEO del
+  App Router y la configuración del sitio quedaba incompleta.
+- **Cómo se solucionó:** se añadieron `src/app/robots.ts` y `src/app/sitemap.ts` con
+  la base URL del proyecto y la lista de rutas públicas.
+- **Archivos:** `src/app/robots.ts`, `src/app/sitemap.ts`
+
+## B5 · Las rutas no tenían metadata única y descriptiva
+
+- **Qué pasaba:** el sitio tenía un título base global, pero cada ruta no siempre tenía
+  texto distintivo para mostrar en el navegador y previsualizaciones compartidas.
+- **Por qué pasaba:** en la migración inicial, el SEO se centró en el root y no se
+  definieron títulos/description específicos para páginas como `forms`, `builder`,
+  `share`, `preview` y `templates`.
+- **Cómo se solucionó:** se dejó el title global y se reforzó la descripción del sitio,
+  además de definir metadata por ruta con `title` y `description` en cada página del app.
+- **Archivos:** `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/forms/page.tsx`,
+  `src/app/builder/page.tsx`, `src/app/share/page.tsx`, `src/app/templates/page.tsx`,
+  `src/app/preview/[id]/page.tsx`
+
+## B6 · La feature `collections` no estaba documentada
+
+- **Qué pasaba:** el proyecto tenía soporte de colecciones de formularios, pero ese
+  feature no figuraba en la documentación principal ni en la introducción del proyecto.
+- **Por qué pasaba:** en la migración se trasladó la feature completa al código sin
+  dejar un trace en la documentación del repositorio.
+- **Cómo se solucionó:** se agregó una sección de documentación y de estructura del
+  proyecto en `README.md` con referencia explícita a `src/features/collections` y a su
+  propósito dentro de FormForge.
+- **Archivo:** `README.md`
