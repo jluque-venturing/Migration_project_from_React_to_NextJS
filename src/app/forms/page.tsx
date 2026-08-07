@@ -1,7 +1,17 @@
-export default function FormsPlaceholder() {
-  return (
-    <div className="flex items-center justify-center min-h-[50vh]">
-      <p className="text-text-muted text-lg">Mis formularios — placeholder (P4)</p>
-    </div>
-  );
+import type { Metadata } from "next";
+import { MyFormsPage } from "@/features/form-lab/components/MyFormsPage";
+
+export const metadata: Metadata = {
+  title: "Mis formularios",
+  description:
+    "Gestioná tus formularios guardados: editá, duplicá, exportá, importá y organizalos en colecciones.",
+  openGraph: {
+    title: "Mis formularios · FormForge",
+    description:
+      "Gestioná tus formularios guardados: editá, duplicá, exportá, importá y organizalos en colecciones.",
+  },
+};
+
+export default function FormsPage() {
+  return <MyFormsPage />;
 }
