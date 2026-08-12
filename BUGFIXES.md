@@ -141,6 +141,59 @@ Los IDs `B*` siguen la numeración de `docs/PLAN-MIGRACION.md` §4.
 - **Cómo se solucionó:** se agregó un `<span className="sr-only">Cargando…</span>`
   en `src/app/loading.tsx`. Cero cambio visual.
 
+### A1 · El color primario no cumplía el contraste mínimo en modo claro
+
+- **Qué pasaba:** en tema claro, todo el texto en color de marca (enlaces del
+  footer, acentos de títulos, el "404", el badge del contador) era difícil de
+  leer. La clase `text-primary` aparece **56 veces** en 26 archivos.
+- **Por qué pasaba:** el token `--color-primary: #06b6d4` estaba declarado con el
+  **mismo valor en ambos temas**. Sobre el fondo oscuro (`#0a0f1a`) rinde 7.89:1,
+  pero sobre el claro (`#f8fafc`) cae a **2.32:1**, muy por debajo del 4.5:1 que
+  exige WCAG 2.1 AA para texto normal.
+- **Cómo se solucionó:** se redefinió el token dentro del bloque `.light` con una
+  variante más oscura del mismo cyan, que conserva la identidad visual:
+  `#0e7490` → **5.12:1**. El tema oscuro queda intacto. Como efecto lateral, el
+  texto blanco sobre `bg-primary` también mejoró (a 5.36:1).
+- **Archivo:** `src/app/globals.css`
+- **Nota:** deuda **preexistente** del proyecto original.
+
+### A2 · La página actual se señalaba únicamente con color
+
+- **Qué pasaba:** en la barra de navegación, el enlace de la página actual se
+  distinguía solo por su color y su fondo. Un lector de pantalla no anunciaba en
+  qué página estaba el usuario, y sin percibir el color no había forma de saberlo.
+  Incumple el punto "no depender solo del color" de la consigna §8.
+- **Cómo se solucionó:** se agregó `aria-current="page"` al enlace activo (el
+  estado nativo que los lectores anuncian como "página actual") y se aplicó la
+  clase `.nav-link-active`, que **ya existía** en `globals.css` sin que la usara
+  nadie y agrega un subrayado — así el estado también se percibe sin color.
+- **Archivos:** `src/components/shell/Nav.tsx`, `src/app/globals.css`
+
+### A3 · Texto del pie de página por debajo del contraste mínimo
+
+- **Qué pasaba:** el aviso de copyright y la lista del stack usaban
+  `text-text-muted/60`, y el eslogan `text-primary/80`. La opacidad sobre colores
+  ya apagados, en texto de 12 px, daba 3.38:1 en oscuro y 2.27:1 en claro.
+- **Cómo se solucionó:** se quitaron los modificadores de opacidad. Con el color
+  pleno queda en 7.47:1 (oscuro) y 4.55:1 (claro).
+- **Archivo:** `src/components/shell/Footer.tsx`
+
+### A4 · Saltos en la jerarquía de encabezados y landmarks sin nombre
+
+- **Qué pasaba:** el pie de página abría en `<h3>` sin un `<h2>` previo, y el
+  `Modal` titulaba con `<h3>`; ambos generaban saltos h1 → h3. Además había dos
+  landmarks `<nav>` por página y solo el del pie estaba nombrado, así que el
+  listado de regiones mostraba dos "navigation" indistinguibles.
+- **Cómo se solucionó:** los encabezados pasaron a `<h2>` y el `<nav>` del
+  encabezado recibió `aria-label="Navegación principal"`. También se agregó
+  `aria-hidden="true"` a los íconos decorativos que no lo tenían y un texto
+  `sr-only` al badge del contador, que se anunciaba como un número suelto.
+- **Archivos:** `src/components/shell/Footer.tsx`, `src/components/shell/Header.tsx`,
+  `src/components/shell/Nav.tsx`, `src/shared/components/ui/Modal.tsx`
+
+> La auditoría completa que originó estas correcciones está en
+> [`auditorias/auditoria-a11y_2026-08-12.md`](./auditorias/auditoria-a11y_2026-08-12.md).
+
 ---
 
 ## Riesgos de migración resueltos

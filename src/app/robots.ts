@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://formforge-next.vercel.app"}/sitemap.xml`,
-    host: process.env.NEXT_PUBLIC_BASE_URL ?? "https://formforge-next.vercel.app",
+    sitemap: `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://migration-project-from-react-to-nex.vercel.app"}/sitemap.xml`,
+    host: process.env.NEXT_PUBLIC_BASE_URL ?? "https://migration-project-from-react-to-nex.vercel.app",
   };
 }
