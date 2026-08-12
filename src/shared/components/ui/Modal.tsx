@@ -117,12 +117,12 @@ export function Modal({
           </div>
 
           <div className="flex-1 space-y-1">
-            <h3
+            <h2
               id="modal-title"
               className="text-lg font-semibold text-text leading-6"
             >
               {title}
-            </h3>
+            </h2>
             <p id="modal-message" className="text-sm text-text-muted">
               {message}
             </p>

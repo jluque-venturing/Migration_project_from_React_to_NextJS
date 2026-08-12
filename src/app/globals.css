@@ -27,10 +27,12 @@
 }
 
 .light {
-  --color-primary: #06b6d4;
-  --color-primary-dark: #0891b2;
+  /* El cyan #06b6d4 del tema oscuro da 2.32:1 sobre fondo claro: no cumple
+     WCAG AA. Estas variantes mantienen la identidad y llegan a 5.12:1. */
+  --color-primary: #0e7490;
+  --color-primary-dark: #155e75;
   --color-secondary: #64748b;
-  --color-success: #06b6d4;
+  --color-success: #0e7490;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
   --color-background: #f8fafc;

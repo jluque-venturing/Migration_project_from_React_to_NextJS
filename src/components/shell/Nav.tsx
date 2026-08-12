@@ -19,10 +19,11 @@ function NavLink({ href, label, isActive }: NavLinkProps) {
     <li>
       <Link
         href={href}
+        aria-current={isActive ? "page" : undefined}
         className={cn(
           "relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
           isActive
-            ? "text-primary bg-primary/10"
+            ? "text-primary bg-primary/10 nav-link-active"
             : "text-text-muted hover:text-text hover:bg-surface"
         )}
       >
@@ -44,18 +45,20 @@ export function Nav() {
       <li>
         <Link
           href="/forms"
+          aria-current={isActive("/forms") ? "page" : undefined}
           className={cn(
             "relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
             isActive("/forms")
-              ? "text-primary bg-primary/10"
+              ? "text-primary bg-primary/10 nav-link-active"
               : "text-text-muted hover:text-text hover:bg-surface"
           )}
         >
-          <FolderOpen size={14} />
+          <FolderOpen size={14} aria-hidden="true" />
           Mis formularios
           {formCount > 0 && (
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white px-1">
               {formCount}
+              <span className="sr-only"> formularios guardados</span>
             </span>
           )}
         </Link>
@@ -68,7 +71,7 @@ export function Nav() {
           className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface/80 px-2.5 py-1.5 text-sm text-text-muted transition-colors hover:text-text hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary"
           aria-label="Abrir paleta de comandos"
         >
-          <Search size={14} />
+          <Search size={14} aria-hidden="true" />
           <kbd className="hidden text-xs opacity-60 sm:inline">⌘K</kbd>
         </button>
       </li>

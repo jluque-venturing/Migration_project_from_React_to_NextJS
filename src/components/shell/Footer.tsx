@@ -23,7 +23,7 @@ export function Footer() {
           </div>
 
           <nav aria-label="Navegación secundaria" className="flex flex-col items-center text-center">
-            <h3 className="mb-3 text-sm font-semibold text-text">Links rápidos</h3>
+            <h2 className="mb-3 text-sm font-semibold text-text">Links rápidos</h2>
             <ul className="space-y-2 text-sm flex flex-col items-center">
               <li>
                 <Link href="/" className="text-text-muted transition-colors hover:text-primary">Inicio</Link>
@@ -41,21 +41,21 @@ export function Footer() {
           </nav>
 
           <div className="space-y-3 sm:col-span-2 lg:col-span-1 flex flex-col items-center text-center sm:items-start sm:text-left">
-            <h3 className="text-sm font-semibold text-text">IntegrarTEC</h3>
+            <h2 className="text-sm font-semibold text-text">IntegrarTEC</h2>
             <p className="text-sm text-text-muted">
               Proyecto Integrador React 2026
             </p>
-            <p className="font-mono text-xs text-primary/80">
+            <p className="font-mono text-xs text-primary">
               Experimentá. Validá. Repetí.
             </p>
           </div>
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border/50 pt-6 sm:flex-row">
-          <p className="text-xs text-text-muted/60">
+          <p className="text-xs text-text-muted">
             © 2026 FormForge. Hecho con cuidado para IntegrarTEC.
           </p>
-          <div className="flex items-center gap-4 text-xs text-text-muted/60">
+          <div className="flex items-center gap-4 text-xs text-text-muted">
             <span>React 19</span>
             <span>·</span>
             <span>TypeScript</span>
