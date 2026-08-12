@@ -305,7 +305,8 @@ function BuilderMainColumn({
         </h3>
         <CollectionSelect formId={formIdValue ?? ""} className="w-full" />
         <p className="mt-1.5 text-xs text-text-muted">
-          Agrupá este formulario en colecciones para organizarlo en "Mis formularios".
+          Agrupá este formulario en colecciones para organizarlo en &quot;Mis
+          formularios&quot;.
         </p>
       </Card>
 
@@ -316,7 +317,8 @@ function BuilderMainColumn({
         </h3>
         <FormTagsInput tags={tags} onChange={onTagsChange} />
         <p className="mt-1.5 text-xs text-text-muted">
-          Presioná Enter o coma para agregar. Sirven para filtrar en "Mis formularios".
+          Presioná Enter o coma para agregar. Sirven para filtrar en &quot;Mis
+          formularios&quot;.
         </p>
       </Card>
 

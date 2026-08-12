@@ -22,6 +22,12 @@ export function JsonPreviewModal({
   const [copied, setCopied] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const isHydrated = useIsHydrated();
+  // Ref para no resuscribir el listener cada vez que el padre re-renderiza.
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   const json = serializeForm(form);
 
@@ -44,7 +50,7 @@ export function JsonPreviewModal({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    const handleClose = () => onClose();
+    const handleClose = () => onCloseRef.current();
     dialog.addEventListener("close", handleClose);
     return () => dialog.removeEventListener("close", handleClose);
   }, [isHydrated, isOpen]);

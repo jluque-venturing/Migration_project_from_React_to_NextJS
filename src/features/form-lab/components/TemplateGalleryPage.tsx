@@ -351,7 +351,7 @@ function UseTemplateDialog({
             Crear copia editable
           </h2>
           <p className="mt-2 text-sm text-text-muted">
-            Vas a crear un formulario nuevo a partir de "{template.name}".
+            Vas a crear un formulario nuevo a partir de &quot;{template.name}&quot;.
           </p>
         </header>
 
